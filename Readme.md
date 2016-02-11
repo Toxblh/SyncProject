@@ -1,1 +1,2 @@
-# SyncProject \nSee video and audio in sync with your friends
+# SyncProject
+See video and audio in sync with your friends
