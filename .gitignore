@@ -1,0 +1,17 @@
+node_modules
+jspm_packages
+bower_components
+.idea
+.DS_Store
+dist
+build/reports
+*.swp
+*.swo
+project/target/
+bundle
+app-build.js
+aurelia.js
+.history
+/target/
+static/post-styles
+brass_build/
