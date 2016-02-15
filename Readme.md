@@ -1,2 +1,3 @@
 # SyncProject
-See video and audio in sync with your friends
+Watch videos synchronized with your friends
+And audio too!
