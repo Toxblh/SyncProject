@@ -19,17 +19,16 @@
   Video <br>
   <video id="video" src="" poster="posterimage.jpg" controls=""></video> <br>
 
-  URL server: <br>
-  <textarea name="url" cols="50">ws://localhost:8000/</textarea> <br>
-
   Audio_BLOCK <br>
   <input type="text" name="src_a" value="test.mp3"><br>
   <input type="button" name=master value="Set MASTER" onClick="setMaster();">
   <input type="button" name=setSRC value="set SRC" onClick="setSRC();">
   <input type="button" name=play_a value="Play" onClick="play_a();">
-  <input type="button" name=play_b value="Pause" onClick="pause_a();">
-  <input type="button" name=play_b value="Vol +" onClick="vol_up_a();">
-  <input type="button" name=play_b value="Vol -" onClick="vol_down_a();">
+  <input type="button" name=pause_a value="Pause" onClick="pause_a();">
+  <input type="button" name=play_b value="SaveTime" onClick="saveTime_a();">
+  <input type="button" name=play_b value="GetUrl" onClick="getUrl_a();">
+  <input type="button" name=play_b value="LoadTime" onClick="loadTime_a();">
+
   <br>
   <input type="button" name=disconnectButton value="Disconnect" onClick="doDisconnect();">
   <input type="button" name=connectButton value="Connect" onClick="doConnect();">

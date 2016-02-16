@@ -55,7 +55,7 @@ function onMessage(e) {
   }
   if (typeof response.pong !== "undefined") {
     PINGend = new Date().getTime();
-    PING_MS = (PINGend - PINGstart)/1000;
+    PING_MS = (PINGend - PINGstart)/100;
     toLog("lag: "+ PING_MS)
     console.log(PING_MS)
   }
@@ -94,7 +94,7 @@ function setSynSRC(url) {
 function play_a() {
   audio.play();
   toLog("audio played");
-  out_time = audio.currentTime + PING_MS*10;
+  out_time = audio.currentTime + PING_MS;
   console.log("{\"audio\": {\"pause\": " + out_time + "}}")
   console.log("{\"audio\": {\"pause\": " + audio.currentTime + "}}")
   doSend("{\"audio\": {\"play\": " + out_time + "}}")
@@ -113,7 +113,7 @@ function pause_a(time) {
   }
   audio.pause();
   toLog("audio paused");
-  out_time = audio.currentTime + PING_MS*10;
+  out_time = audio.currentTime + PING_MS;
   console.log("{\"audio\": {\"pause\": " + out_time + "}}")
   console.log("{\"audio\": {\"pause\": " + audio.currentTime + "}}")
   doSend("{\"audio\": {\"pause\": " + out_time + "}}")
