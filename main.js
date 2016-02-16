@@ -10,16 +10,16 @@ function init() {
 function doConnect() {
   ws = new WebSocket(url_ws);
   ws.onopen = function(e) {
-    onOpen(e)
+    onOpen(e);
   };
   ws.onclose = function(e) {
-    onClose(e)
+    onClose(e);
   };
   ws.onmessage = function(e) {
-    onMessage(e)
+    onMessage(e);
   };
   ws.onerror = function(e) {
-    onError(e)
+    onError(e);
   };
 }
 
@@ -44,10 +44,10 @@ function onMessage(e) {
       setSynSRC(response.audio.src);
     }
     if (typeof response.audio.play !== "undefined") {
-      play_sync_a(response.audio.play)
+      play_sync_a(response.audio.play);
     }
     if (typeof response.audio.pause !== "undefined") {
-      pause_sync_a(response.audio.pause)
+      pause_sync_a(response.audio.pause);
     }
   }
   if (typeof response.ping !== "undefined") {
@@ -56,8 +56,8 @@ function onMessage(e) {
   if (typeof response.pong !== "undefined") {
     PINGend = new Date().getTime();
     PING_MS = (PINGend - PINGstart)/100;
-    toLog("lag: "+ PING_MS)
-    console.log(PING_MS)
+    toLog("lag: "+ PING_MS);
+    console.log(PING_MS);
   }
 }
 
@@ -81,7 +81,7 @@ function setSRC(url) {
   url = url || "test.mp3";
   audio.src = url;
   toLog("audio set SRC: " + url);
-  doSend("{\"audio\": {\"src\": \"" + url + "\"}}")
+  doSend("{\"audio\": {\"src\": \"" + url + "\"}}");
 
   PingPong();
 }
@@ -95,43 +95,54 @@ function play_a() {
   audio.play();
   toLog("audio played");
   out_time = audio.currentTime + PING_MS;
-  console.log("{\"audio\": {\"pause\": " + out_time + "}}")
-  console.log("{\"audio\": {\"pause\": " + audio.currentTime + "}}")
-  doSend("{\"audio\": {\"play\": " + out_time + "}}")
+  console.log("{\"audio\": {\"pause\": " + out_time + "}}");
+  console.log("{\"audio\": {\"pause\": " + audio.currentTime + "}}");
+  doSend("{\"audio\": {\"play\": " + out_time + "}}");
 }
 
 function play_sync_a(time) {
-  audio.currentTime = time
+  audio.currentTime = time;
   audio.play();
   toLog("audio played");
 }
 
 function pause_a(time) {
   time = time || 0;
-  if (time != 0) {
-    audio.currentTime = time
+  if (time !== 0) {
+    audio.currentTime = time;
   }
   audio.pause();
   toLog("audio paused");
   out_time = audio.currentTime + PING_MS;
-  console.log("{\"audio\": {\"pause\": " + out_time + "}}")
-  console.log("{\"audio\": {\"pause\": " + audio.currentTime + "}}")
-  doSend("{\"audio\": {\"pause\": " + out_time + "}}")
+  console.log("{\"audio\": {\"pause\": " + out_time + "}}");
+  console.log("{\"audio\": {\"pause\": " + audio.currentTime + "}}");
+  doSend("{\"audio\": {\"pause\": " + out_time + "}}");
 }
 
 function pause_sync_a(time) {
-  audio.currentTime = time
+  audio.currentTime = time;
   audio.pause();
   toLog("audio pauseed");
+}
+
+function saveTime_a() {
+
+}
+
+function getUrl_a() {
+
+}
+
+function loadTime_a() {
+
 }
 
 function testMess() {
   doSend('Test message');
 }
 
-
 function toLog(message) {
-  log.innerHTML += message + "<br>"
+  log.innerHTML += message + "<br>";
   log.scrollTop = log.scrollHeight;
 }
 
