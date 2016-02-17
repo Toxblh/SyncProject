@@ -5,7 +5,7 @@ import signal
 import sys
 import ssl
 import sqlite3
-# import json
+import json
 from SimpleWebSocketServer import WebSocket, SimpleWebSocketServer, SimpleSSLWebSocketServer
 from optparse import OptionParser
 
@@ -15,10 +15,21 @@ clients = []
 class SimpleChat(WebSocket):
 
     def handleMessage(self):
-        print self.data
-        for client in clients:
-            if client != self:
-                client.sendMessage(self.data)
+        data = json.loads(self.data)
+        # print data
+        try:
+            if 'saveTime' in data:
+                print data['saveTime']['user_id']
+                print data['saveTime']['curTime']
+                print data['saveTime']['src']
+            elif 'getURL' in data:
+                print data['getURL']
+            else:
+                for client in clients:
+                    if client != self:
+                        client.sendMessage(self.data)
+        except Exception:
+            print 'Exception!!'
 
     def handleConnected(self):
         print (self.address, 'connected')

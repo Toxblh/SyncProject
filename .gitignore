@@ -15,3 +15,4 @@ aurelia.js
 /target/
 static/post-styles
 brass_build/
+/server/syncdb.db
