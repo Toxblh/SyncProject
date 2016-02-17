@@ -4,7 +4,8 @@ var PING_MS;
 
 function init() {
   url_ws = "ws://localhost:8000/";
-  //setInterval("Debug();", 1000);
+  setInterval("Debug();", 1000);
+  doConnect();
 }
 
 function doConnect() {
@@ -50,14 +51,31 @@ function onMessage(e) {
       pause_sync_a(response.audio.pause);
     }
   }
+
   if (typeof response.ping !== "undefined") {
-    doSend('{"pong":"pong"}');
+    doSend('{"pong":"ping"}');
   }
+
   if (typeof response.pong !== "undefined") {
     PINGend = new Date().getTime();
-    PING_MS = (PINGend - PINGstart)/100;
-    toLog("lag: "+ PING_MS);
+    PING_MS = (PINGend - PINGstart) / 100;
+    toLog("lag: " + PING_MS);
     console.log(PING_MS);
+  }
+
+  if (typeof response.login !== "undefined") {
+    alert(response.login.message);
+    document.location.hash = '#'+response.login.user_id
+  }
+
+  if (typeof response.registration !== "undefined") {
+    alert(response.registration.message);
+  }
+
+  if (typeof response.loadTime !== "undefined") {
+    audio.src = response.loadTime.src;
+    audio.currentTime = response.loadTime.cur_time;
+    audio.play();
   }
 }
 
@@ -74,14 +92,19 @@ function doSend(message) {
 
 function PingPong() {
   PINGstart = new Date().getTime();
-  doSend('{"ping":"ping"}');
+  doSend('{"ping":"pong"}');
 }
 
 function setSRC(url) {
-  url = url || "test.mp3";
+  src_a = document.getElementById('src_audio').value;
+  url = url || src_a;
   audio.src = url;
   toLog("audio set SRC: " + url);
-  doSend("{\"audio\": {\"src\": \"" + url + "\"}}");
+  doSend(JSON.stringify({
+    "audio": {
+      "src": url
+    }
+  }));
 
   PingPong();
 }
@@ -95,9 +118,13 @@ function play_a() {
   audio.play();
   toLog("audio played");
   out_time = audio.currentTime + PING_MS;
-  console.log("{\"audio\": {\"pause\": " + out_time + "}}");
-  console.log("{\"audio\": {\"pause\": " + audio.currentTime + "}}");
-  doSend("{\"audio\": {\"play\": " + out_time + "}}");
+  out_time = audio.currentTime + PING_MS;
+  send_time = out_time ? out_time : audio.currentTime;
+  doSend(JSON.stringify({
+    "audio": {
+      "play": send_time
+    }
+  }));
 }
 
 function play_sync_a(time) {
@@ -114,9 +141,12 @@ function pause_a(time) {
   audio.pause();
   toLog("audio paused");
   out_time = audio.currentTime + PING_MS;
-  console.log("{\"audio\": {\"pause\": " + out_time + "}}");
-  console.log("{\"audio\": {\"pause\": " + audio.currentTime + "}}");
-  doSend("{\"audio\": {\"pause\": " + out_time + "}}");
+  send_time = out_time ? out_time : audio.currentTime;
+  doSend(JSON.stringify({
+    "audio": {
+      "pause": send_time
+    }
+  }));
 }
 
 function pause_sync_a(time) {
@@ -126,19 +156,47 @@ function pause_sync_a(time) {
 }
 
 function saveTime_a() {
-
-}
-
-function getUrl_a() {
-
+  doSend(JSON.stringify({
+    "saveTime": {
+      "user_id" : document.location.hash.substr(1),
+      "curTime": audio.currentTime,
+      "src" : audio.currentSrc
+    }
+  }));
 }
 
 function loadTime_a() {
-
+  doSend(JSON.stringify({
+    "loadTime": {
+      "user_id" : document.location.hash.substr(1)
+    }
+  }));
 }
 
 function testMess() {
   doSend('Test message');
+}
+
+function registration() {
+  login = document.getElementById('login').value;
+  password = document.getElementById('password').value;
+  doSend(JSON.stringify({
+    "reg": {
+      "username" : login,
+      "password" : password
+    }
+  }));
+}
+
+function singin() {
+  login = document.getElementById('login').value;
+  password = document.getElementById('password').value;
+  doSend(JSON.stringify({
+    "login": {
+      "username" : login,
+      "password" : password
+    }
+  }));
 }
 
 function toLog(message) {

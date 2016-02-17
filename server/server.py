@@ -16,14 +16,55 @@ class SimpleChat(WebSocket):
 
     def handleMessage(self):
         data = json.loads(self.data)
-        # print data
+        print data
         try:
             if 'saveTime' in data:
                 print data['saveTime']['user_id']
                 print data['saveTime']['curTime']
                 print data['saveTime']['src']
-            elif 'getURL' in data:
-                print data['getURL']
+                c.execute("INSERT INTO sync(user_id, src, cur_time) VALUES (?,?,?)", (data['saveTime']['user_id'], data['saveTime']['src'], data['saveTime']['curTime']))
+                id_sync = c.lastrowid
+                self.sendMessage(u'{"saveTime":%s}' % id_sync)
+                conn.commit()
+
+            elif 'loadTime' in data:
+                print data['loadTime']['user_id']
+                c.execute("SELECT src, cur_time FROM sync WHERE user_id = ?", [data['loadTime']['user_id']])
+                DBres = c.fetchall()
+                print DBres
+                src_a = DBres[len(DBres) - 1][0]
+                curTime_a = DBres[len(DBres) - 1][1]
+                print src_a, curTime_a
+                self.sendMessage(u'{"loadTime":{"src":"%s", "cur_time":%s}}' % (src_a, curTime_a))
+
+            elif 'login' in data:
+                l_name = data['login']['username']
+                l_password = data['login']['password']
+                c.execute("SELECT user_id FROM users WHERE name = ? AND password = ?", (l_name, l_password))
+                dataDB = c.fetchall()
+                print l_name, l_password, dataDB
+                print len(dataDB)
+                print len(dataDB) == 0
+                if len(dataDB) == 0:
+                    print('Bad crendel! %s' % l_name)
+                    self.sendMessage(u'{"login": {"message": "Bad crendel!"}')
+                    self.sendMessage(u'{"login": {"message": "Bad crendel! %s"}}' % l_name)
+                else:
+                    print dataDB[0][0]
+                    print('It\'s good crendel! %s injoy! user_id: %s' % (l_name, dataDB[0][0]))
+                    self.sendMessage(u'{"login": {"message": "It\'s good crendel! %s injoy!", "user_id" : %s}}' % (l_name, dataDB[0][0]))
+
+            elif 'reg' in data:
+                r_name = data['reg']['username']
+                print r_name
+                r_pass = data['reg']['password']
+                print r_pass
+                c.execute("INSERT INTO users(name, password) VALUES (?,?)", (r_name, r_pass))
+                id_user = c.lastrowid
+                print(id_user)
+                conn.commit()
+                self.sendMessage(u'{"registration": {"message": %s}}"' % id_user)
+
             else:
                 for client in clients:
                     if client != self:
@@ -63,6 +104,7 @@ if __name__ == "__main__":
     (options, args) = parser.parse_args()
 
     conn = sqlite3.connect('syncdb.db')
+    c = conn.cursor()
     cls = SimpleChat
 
     if options.ssl == 1:
@@ -73,6 +115,7 @@ if __name__ == "__main__":
 
     def close_sig_handler(signal, frame):
         server.close()
+        conn.commit()
         conn.close()
         sys.exit()
 

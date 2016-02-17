@@ -6,10 +6,12 @@
 <body>
 
 <!-- DEBUG MODE -->
+<div style="position:absolute; top: 0; right:0;">
   DEBUG: <br>
-  <pre id="debug"></pre>
+  <pre id="debug" style="height:300px; width:400px; overflow:scroll;border: 1px solid gray"></pre>
   LOG: <br>
-  <div id="log"></div>
+  <div id="log" style="height:300px; width:400px; overflow:scroll;border: 1px solid gray"></div>
+</div>
 <!-- / DEBUG MODE -->
 
 
@@ -20,19 +22,26 @@
   <video id="video" src="" poster="posterimage.jpg" controls=""></video> <br>
 
   Audio_BLOCK <br>
-  <input type="text" name="src_a" value="test.mp3"><br>
+  <input type="text" name="src_a" id="src_audio" value="test.mp3"><br>
   <input type="button" name=master value="Set MASTER" onClick="setMaster();">
   <input type="button" name=setSRC value="set SRC" onClick="setSRC();">
   <input type="button" name=play_a value="Play" onClick="play_a();">
   <input type="button" name=pause_a value="Pause" onClick="pause_a();">
+  <br>
   <input type="button" name=play_b value="SaveTime" onClick="saveTime_a();">
-  <input type="button" name=play_b value="GetUrl" onClick="getUrl_a();">
   <input type="button" name=play_b value="LoadTime" onClick="loadTime_a();">
-
   <br>
   <input type="button" name=disconnectButton value="Disconnect" onClick="doDisconnect();">
   <input type="button" name=connectButton value="Connect" onClick="doConnect();">
   <input type="button" name=connectButton value="testMess" onClick="testMess();">
+<br>
+<input type="text" id="login" value="" placeholder="login">
+<input type="text" id="password" value="" placeholder="password">
+<br>
+<input type="button" id="singin" value="Войти" onClick="singin();">
+<input type="button" id="join" value="Регистрация" onClick="registration();">
+
+
 
   <script src="main.js" type="text/javascript"></script>
 </body>

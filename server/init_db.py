@@ -5,7 +5,7 @@ import sqlite3
 
 conn = sqlite3.connect('syncdb.db')
 c = conn.cursor()
-c.execute('''CREATE TABLE sync (id text, name text, url text, time text)''')
-c.execute("INSERT INTO sync VALUES ('1','Test.MP3','test.mp3','14')")
+c.execute('''CREATE TABLE sync (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,  user_id INTEGER, src text, cur_time text)''')
+c.execute('''CREATE TABLE users (user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name text, password text)''')
 conn.commit()
 conn.close()
